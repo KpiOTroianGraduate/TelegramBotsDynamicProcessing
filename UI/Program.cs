@@ -29,7 +29,6 @@ namespace UI
 
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             app.Run();
