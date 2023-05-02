@@ -22,6 +22,9 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: true
 
+      - name: Setup nuget profile
+        run: dotnet nuget add source "https://nuget.pkg.github.com/KpiOTroianGraduate/index.json" -n "github" -u ${{ secrets.USER_NAME }} -p ${{ secrets.USER_PASSWORD }} --store-password-in-clear-text
+        
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
