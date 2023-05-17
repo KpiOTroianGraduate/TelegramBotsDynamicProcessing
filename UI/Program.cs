@@ -1,7 +1,13 @@
+using DAL;
+using DAL.UnitOfWork;
+using DAL.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.Resource;
+using Services;
+using Services.Interfaces;
 
 namespace UI
 {
@@ -19,6 +25,13 @@ namespace UI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<TelegramContext>(options =>
+            {
+                var connectionString = Environment.GetEnvironmentVariable("TelegramConnection");
+                options.UseSqlServer(connectionString);
+            });
+            builder.Services.AddTransient<ITelegramService, TelegramService>();
+            builder.Services.AddTransient<ISqlUnitOfWork, SqlUnitOfWork>();
 
             var app = builder.Build();
 
