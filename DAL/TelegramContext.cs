@@ -43,7 +43,7 @@ public sealed class TelegramContext : DbContext
         modelBuilder.Entity<TelegramBot>()
             .HasMany(b => b.Commands)
             .WithOne(c => c.TelegramBot)
-            .HasForeignKey(c => c.BotId)
+            .HasForeignKey(c => c.TelegramBotId)
             .HasPrincipalKey(b => b.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
@@ -61,6 +61,13 @@ public sealed class TelegramContext : DbContext
         modelBuilder.Entity<Command>()
             .HasKey(u => u.Id);
 
+        //modelBuilder.Entity<Command>()
+        //    .HasOne(c => c.TelegramBot)
+        //    .WithMany(b => b.Commands)
+        //    .HasForeignKey(c => c.TelegramBot)
+        //    .HasPrincipalKey(b => b.Id)
+        //    .OnDelete(DeleteBehavior.Cascade);
+
         #endregion
 
         #region CommandAction setup
@@ -74,6 +81,13 @@ public sealed class TelegramContext : DbContext
             .HasForeignKey(c => c.CommandActionId)
             .HasPrincipalKey(a => a.Id)
             .OnDelete(DeleteBehavior.ClientSetNull);
+
+        //modelBuilder.Entity<CommandAction>()
+        //    .HasOne(a => a.TelegramBot)
+        //    .WithMany(b => b.CommandActions)
+        //    .HasForeignKey(a => a.TelegramBotId)
+        //    .HasPrincipalKey(b => b.Id)
+        //    .OnDelete(DeleteBehavior.Cascade);
 
         #endregion
     }

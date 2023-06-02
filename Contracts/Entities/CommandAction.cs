@@ -16,7 +16,8 @@ public class CommandAction
 
 public enum CommandActionType
 {
-    HttpGet,
+    Text,
     HttpPost,
-    Text
+    InlineKeyboard,
+    ReplyKeyboard
 }

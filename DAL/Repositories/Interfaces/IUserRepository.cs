@@ -1,6 +1,8 @@
-﻿namespace DAL.Repositories.Interfaces;
+﻿using Contracts.Entities;
+using DAL.Repositories.Base;
 
-public interface IUserRepository
+namespace DAL.Repositories.Interfaces;
+
+public interface IUserRepository : IBaseRepository<User>
 {
-    Task AddUserAsync();
 }

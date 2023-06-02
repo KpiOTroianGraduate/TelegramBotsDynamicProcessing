@@ -1,48 +1,53 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using Telegram.Bot.Exceptions;
+using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
+using UI.Controllers.Base;
 
 namespace UI.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
-public class TelegramController : ControllerBase
+[AllowAnonymous]
+public class TelegramController : BaseController<TelegramController>
 {
-    private readonly ILogger<TelegramController> _logger;
     private readonly ITelegramService _telegramService;
 
-    public TelegramController(ITelegramService telegramService, ILogger<TelegramController> logger)
+    public TelegramController(ITelegramService telegramService, ILogger<TelegramController> logger) : base(logger)
     {
         _telegramService = telegramService;
-        _logger = logger;
     }
 
-    [HttpPost("{botId}")]
-    public async Task<IActionResult> GetUpdateFromTelegram([FromRoute] string botId, [FromBody] Update update)
+    [HttpGet("{botId}")]
+    public async Task<IActionResult> SetUpBot([FromRoute] string botId)
     {
         try
         {
-            await _telegramService.ProcessMessageAsync(botId, update);
-
+            await _telegramService.SetUpBotAsync(botId).ConfigureAwait(false);
             return Ok();
-        }
-        catch (ApiRequestException ex)
-        {
-            _logger.LogError(ex, $"GetMessageFromTelegram, botId: {botId}, update: {update}, message: {ex.Message}");
-            return BadRequest("Bot is unavailable");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"GetMessageFromTelegram, botId: {botId}, update: {update}, message: {ex.Message}");
+            Logger.LogError(ex, $"SetUpBot, botId: {botId}, message: {ex.Message}");
             return BadRequest();
         }
     }
 
-    [HttpGet]
-    public async Task<IActionResult> Get()
+    [HttpPost("{botId:required}")]
+    public async Task<IActionResult> GetUpdateFromTelegram([FromRoute] string botId, [FromBody] Update update)
     {
-        await _telegramService.ProcessMessageAsync("", new Update()).ConfigureAwait(false);
-        return Ok();
+        try
+        {
+            await _telegramService.ProcessMessageAsync(botId, update)
+                .ConfigureAwait(false);
+
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex,
+                $"GetMessageFromTelegram, botId: {botId}, update: {update}, message: {ex.Message}");
+            return BadRequest();
+        }
     }
 }

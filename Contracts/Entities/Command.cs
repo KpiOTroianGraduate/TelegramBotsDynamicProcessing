@@ -8,7 +8,7 @@ public class Command : BotCommand
 
     public bool IsActive { get; set; }
 
-    public Guid BotId { get; set; }
+    public Guid TelegramBotId { get; set; }
     public TelegramBot? TelegramBot { get; set; }
 
     public Guid? CommandActionId { get; set; }
