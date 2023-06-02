@@ -1,4 +1,4 @@
-﻿const url = "https://localhost:8443/";
+﻿const url = "https://hapan9-telegram.azurewebsites.net/";
 var telegramBotId;
 var jwtToken;
 

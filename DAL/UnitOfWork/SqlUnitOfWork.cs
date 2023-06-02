@@ -22,8 +22,10 @@ public class SqlUnitOfWork : ISqlUnitOfWork
     {
         //var connectionString = "Server=tcp:hapan9.database.windows.net,1433;Initial Catalog=hapan9-telegram;Persist Security Info=False;User ID=CloudSAacd16069;Password=61BimitE61;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         var connectionString = "Server=(localdb)\\mssqllocaldb;Database=TelegramBotDb;Trusted_Connection=True;";
+        //var sql = new DbContextOptionsBuilder<TelegramContext>()
+        //    .UseSqlServer(connectionString);
         var sql = new DbContextOptionsBuilder<TelegramContext>()
-            .UseSqlServer(connectionString);
+            .UseInMemoryDatabase("str");
         _db = new TelegramContext(sql.Options);
         _loggerFactory = loggerFactory;
     }

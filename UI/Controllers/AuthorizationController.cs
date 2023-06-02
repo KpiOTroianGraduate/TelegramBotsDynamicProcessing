@@ -16,7 +16,7 @@ public class AuthorizationController : BaseController<AuthorizationController>
     public IActionResult LogIn()
     {
         return RedirectPermanent(
-            "https://login.microsoftonline.com/692688bc-3689-4b5b-885b-3f6bb78038dc/oauth2/v2.0/authorize?client_id=902dfa66-4d56-41af-bf56-347114aff037&response_type=token&scope=api://902dfa66-4d56-41af-bf56-347114aff037/users.api.scope&redirect_uri=https://localhost:8443/index.html");
+            "https://login.microsoftonline.com/692688bc-3689-4b5b-885b-3f6bb78038dc/oauth2/v2.0/authorize?client_id=902dfa66-4d56-41af-bf56-347114aff037&response_type=token&scope=api://902dfa66-4d56-41af-bf56-347114aff037/users.api.scope&redirect_uri=https://hapan9-telegram.azurewebsites.net/index.html");
     }
 
     [HttpGet]

@@ -7,7 +7,6 @@ public sealed class TelegramContext : DbContext
 {
     public TelegramContext(DbContextOptions<TelegramContext> options) : base(options)
     {
-        //Database.EnsureDeleted();
         Database.EnsureCreated();
     }
 
@@ -60,13 +59,7 @@ public sealed class TelegramContext : DbContext
 
         modelBuilder.Entity<Command>()
             .HasKey(u => u.Id);
-
-        //modelBuilder.Entity<Command>()
-        //    .HasOne(c => c.TelegramBot)
-        //    .WithMany(b => b.Commands)
-        //    .HasForeignKey(c => c.TelegramBot)
-        //    .HasPrincipalKey(b => b.Id)
-        //    .OnDelete(DeleteBehavior.Cascade);
+        
 
         #endregion
 
@@ -82,13 +75,28 @@ public sealed class TelegramContext : DbContext
             .HasPrincipalKey(a => a.Id)
             .OnDelete(DeleteBehavior.ClientSetNull);
 
-        //modelBuilder.Entity<CommandAction>()
-        //    .HasOne(a => a.TelegramBot)
-        //    .WithMany(b => b.CommandActions)
-        //    .HasForeignKey(a => a.TelegramBotId)
-        //    .HasPrincipalKey(b => b.Id)
-        //    .OnDelete(DeleteBehavior.Cascade);
-
         #endregion
+
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            FirstName = "Admin",
+            Surname = "Admin",
+            Email = "tpo9h.cawa@gmail.com"
+        };
+
+        modelBuilder.Entity<User>()
+            .HasData(user);
+
+        var telegramBot = new TelegramBot
+        {
+            IsActive = true,
+            Id = Guid.NewGuid(),
+            UserId = user.Id,
+            Token = "5656162661:AAFR-yAPsrYrGTFa6XYSmD0Ijkg0z81aPrI"
+        };
+
+        modelBuilder.Entity<TelegramBot>()
+            .HasData(telegramBot);
     }
 }
