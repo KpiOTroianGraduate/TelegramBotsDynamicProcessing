@@ -155,22 +155,6 @@ const SetUpCommandActionView = async (buttonId, commandActionType) => {
 
             var inputText = document.getElementById(`inputValue-${table.id}`);
             inputText.value = content.content;
-            //let row = document.createElement('tr');
-            //row.id = `row-${table.id}`;
-            //let inputCell = document.createElement('td');
-
-            //if(commandActionType == CommandActionType.Text)
-            //    inputCell.innerHTML = "text";
-            //else if(commandActionType == CommandActionType.HttpPost)
-            //    inputCell.innerHTML = "url";
-
-            //row.appendChild(inputCell);
-            //inputCell = document.createElement('td');
-            //let inputText = document.createElement('input');
-            //inputText.id = `inputValue-${table.id}`;
-            //inputCell.appendChild(inputText);
-            //row.appendChild(inputCell);
-            //tbody.appendChild(row);
         }
 
         let tfoot = document.getElementById(`tfoot-${table.id}`);
@@ -197,9 +181,6 @@ const SetUpCommandActionView = async (buttonId, commandActionType) => {
         };
         tfoot.appendChild(deleteButton);
     }
-
-    //var table = GenerateButtonTable(1, true);
-    //presentComandActions.appendChild(table);
 
     //Setup newComandActions
     newComandActions.setAttribute("tableCount", 0);
@@ -290,7 +271,7 @@ const CreateCommandAction = async (content) => {
                 showMessageBox("Success", "CommandAction created successfully");
             }
         })
-        .catch(ex => { showMessageBox(`Error when save CommandAction ${ex.json}`, ex, '#d70040'); });
+        .catch(ex => { showMessageBox(`Error while saving CommandAction ${ex.json}`, ex, '#d70040'); });
 };
 
 const UpdateCommandAction = async (id, content) => {
@@ -300,7 +281,7 @@ const UpdateCommandAction = async (id, content) => {
                 showMessageBox("Success", "CommandAction updated successfully");
             }
         })
-        .catch(ex => { showMessageBox(`Error when update CommandAction ${ex.json}`, ex, '#d70040'); });
+        .catch(ex => { showMessageBox(`Error while updating CommandAction ${ex.json}`, ex, '#d70040'); });
 }
 
 const DeleteCommandAction = async (id) => {
@@ -310,7 +291,7 @@ const DeleteCommandAction = async (id) => {
                 showMessageBox("Success", "CommandAction deleted successfully");
             }
         })
-        .catch(ex => { showMessageBox(`Error when delete CommandAction ${ex.json}`, ex, '#d70040'); });
+        .catch(ex => { showMessageBox(`Error while deleting CommandAction ${ex.json}`, ex, '#d70040'); });
 }
 
 function GenerateSimpleTable(tableId, valueName){

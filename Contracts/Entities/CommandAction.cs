@@ -11,7 +11,7 @@ public class CommandAction
     public Guid TelegramBotId { get; set; }
     public TelegramBot? TelegramBot { get; set; }
 
-    public ICollection<Command>? Commands { get; set; }
+    public ICollection<Command> Commands { get; set; } = new List<Command>();
 }
 
 public enum CommandActionType

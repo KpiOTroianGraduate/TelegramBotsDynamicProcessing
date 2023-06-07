@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Transactions;
 using AutoMapper;
 using Contracts.Dto.User;
 using Contracts.Entities;
@@ -17,34 +18,27 @@ public class UserService : BaseService<UserService>, IUserService
     {
     }
 
-    public async Task<UserDto> GetUserByIdAsync(IEnumerable<Claim> claims, Guid id)
+    public async Task<User> GetUserByIdAsync(Guid id)
     {
         var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
         var user = await unitOfWork.UserRepository.GetAsync(id).ConfigureAwait(false);
 
-        return user == null ? throw new NotFoundException() : Mapper.Map<UserDto>(user);
+        return user ?? throw new NotFoundException();
     }
 
-    public async Task CreateUserAsync(IEnumerable<Claim> claims)
+    public async Task<UserDto> RegisterUserAsync(IEnumerable<Claim> claims)
     {
-        var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
-        await unitOfWork.UserRepository.AddAsync(new User
-        {
-            Email = "email",
-            FirstName = "firstName",
-            Surname = "lastName"
-        }).ConfigureAwait(false);
+        var user = Mapper.Map<User>(claims.ToArray());
+
+        var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork(IsolationLevel.ReadUncommitted);
+        var dbUser = await unitOfWork.UserRepository.GetFirstOrDefaultAsync(u => u.Email.Equals(user.Email))
+            .ConfigureAwait(false);
+        if (dbUser != null) return Mapper.Map<UserDto>(dbUser);
+
+        await unitOfWork.UserRepository.AddAsync(user).ConfigureAwait(false);
         await unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-        //var result = await unitOfWork.CommandActionRepository.GetAsync(Guid.Parse("19ABF8A8-C63E-497B-3143-08DB5BCCBB7D"))
-        //    .ConfigureAwait(false);
-        //var res = JsonConvert.DeserializeObject<KeyboardMarkupDto<InlineKeyboardButton>>(result.Content);
-        //return;
-
-        //var claimsArray = claims.ToArray();
-        //var user = Mapper.Map<User>(claimsArray);
-
-        //var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
-        //await unitOfWork.UserRepository.AddAsync(user).ConfigureAwait(false);
-        //await unitOfWork.SaveChangesAsync().ConfigureAwait(false);
+        dbUser = await unitOfWork.UserRepository.GetFirstOrDefaultAsync(u => u.Email.Equals(user.Email))
+            .ConfigureAwait(false);
+        return Mapper.Map<UserDto>(dbUser);
     }
 }

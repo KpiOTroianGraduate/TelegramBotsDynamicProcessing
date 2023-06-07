@@ -90,6 +90,14 @@ var Tempate;
         }
         return Command;
     }());
+    var TelegramBot = /** @class */ (function () {
+        function TelegramBot(token, isActive, userId) {
+            this.token = token;
+            this.isActive = isActive;
+            this.userId = userId;
+        }
+        return TelegramBot;
+    }());
     function SendRequest(urlEnd, requestType, data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

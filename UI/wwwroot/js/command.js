@@ -95,7 +95,7 @@ const CreateCommand = async (content) => {
                 showMessageBox("Success", "Command created successfully");
             }
         })
-        .catch(ex => { showMessageBox(`Error when save Command ${ex.json}`, ex, '#d70040'); });
+        .catch(ex => { showMessageBox(`Error while saving Command ${ex.json}`, ex, '#d70040'); });
 }
 
 const UpdateCommand = async (id, content) => {
@@ -105,7 +105,7 @@ const UpdateCommand = async (id, content) => {
                 showMessageBox("Success", "Command updated successfully");
             }
         })
-        .catch(ex => { showMessageBox(`Error when update Command ${ex.json}`, ex, '#d70040'); });
+        .catch(ex => { showMessageBox(`Error while updating Command ${ex.json}`, ex, '#d70040'); });
 }
 
 const DeleteCommand = async (id) => {
@@ -115,7 +115,7 @@ const DeleteCommand = async (id) => {
                 showMessageBox("Success", "Command deleted successfully");
             }
         })
-        .catch(ex => { showMessageBox(`Error when update Command ${ex.json}`, ex, '#d70040'); });
+        .catch(ex => { showMessageBox(`Error while deleting Command ${ex.json}`, ex, '#d70040'); });
 }
 
 function GenerateCommandTable(commandId, commandActionId = null) {

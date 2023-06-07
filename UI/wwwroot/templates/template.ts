@@ -72,6 +72,17 @@
         }
     }
 
+    class TelegramBot {
+        token: string;
+        isActive: boolean;
+        userId: string;
+        constructor(token: string, isActive: boolean, userId: string) {
+            this.token = token;
+            this.isActive = isActive;
+            this.userId = userId;
+        }
+    }
+
     async function SendRequest(urlEnd: string, requestType: string, data: any) {
         return await fetch(`${url}${urlEnd}`, {
             method: requestType,

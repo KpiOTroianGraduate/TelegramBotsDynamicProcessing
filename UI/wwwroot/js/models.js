@@ -1,4 +1,4 @@
-﻿const url = "https://hapan9-telegram.azurewebsites.net/";
+﻿const url = "https://localhost:8443/";
 var telegramBotId;
 var jwtToken;
 
@@ -47,5 +47,12 @@ class Command {
         this.isActive = isActive;
         this.telegramBotId = telegramBotId;
         this.commandActionId = commandActionId;
+    }
+}
+class TelegramBot {
+    constructor(token, isActive, userId) {
+        this.token = token;
+        this.isActive = isActive;
+        this.userId = userId;
     }
 }

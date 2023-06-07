@@ -1,5 +1,4 @@
-﻿using System.Net.Sockets;
-using System.Text;
+﻿using System.Text;
 using System.Transactions;
 using AutoMapper;
 using Contracts.Dto;
@@ -54,6 +53,7 @@ public class TelegramService : BaseService<TelegramService>, ITelegramService
         if (commandAction == null) return;
 
         var bot = new TelegramBotClient(botId, _httpClient);
+        await bot.SendChatActionAsync(update.Message.Chat.Id, ChatAction.Typing).ConfigureAwait(false);
 
         switch (commandAction.CommandActionType)
         {
@@ -135,6 +135,12 @@ public class TelegramService : BaseService<TelegramService>, ITelegramService
 
         await bot.SetWebhookAsync($"https://hapan9-telegram.azurewebsites.net:443/api/Telegram/{botId}")
             .ConfigureAwait(false);
+    }
+
+    public async Task SendMessagesToAllAsync(string botId)
+    {
+
+        var bot = new TelegramBotClient(botId, _httpClient);
     }
 
     public async Task<List<TelegramBotInfoDto>> GetBotsInfoAsync(List<TelegramBot> telegramBots)

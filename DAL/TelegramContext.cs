@@ -26,6 +26,10 @@ public sealed class TelegramContext : DbContext
             .HasKey(u => u.Id);
 
         modelBuilder.Entity<User>()
+            .HasIndex(b => b.Email)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
             .HasMany(u => u.TelegramBots)
             .WithOne(b => b.User)
             .HasForeignKey(b => b.UserId)
@@ -38,6 +42,10 @@ public sealed class TelegramContext : DbContext
 
         modelBuilder.Entity<TelegramBot>()
             .HasKey(u => u.Id);
+
+        modelBuilder.Entity<TelegramBot>()
+            .HasIndex(b => b.Token)
+            .IsUnique();
 
         modelBuilder.Entity<TelegramBot>()
             .HasMany(b => b.Commands)
@@ -59,7 +67,6 @@ public sealed class TelegramContext : DbContext
 
         modelBuilder.Entity<Command>()
             .HasKey(u => u.Id);
-        
 
         #endregion
 
@@ -77,26 +84,24 @@ public sealed class TelegramContext : DbContext
 
         #endregion
 
-        var user = new User
-        {
-            Id = Guid.NewGuid(),
-            FirstName = "Admin",
-            Surname = "Admin",
-            Email = "tpo9h.cawa@gmail.com"
-        };
+        //var user = new User
+        //{
+        //    Id = Guid.NewGuid(),
+        //    Email = "tpo9h.cawa@gmail.com"
+        //};
 
-        modelBuilder.Entity<User>()
-            .HasData(user);
+        //modelBuilder.Entity<User>()
+        //    .HasData(user);
 
-        var telegramBot = new TelegramBot
-        {
-            IsActive = true,
-            Id = Guid.NewGuid(),
-            UserId = user.Id,
-            Token = "5656162661:AAFR-yAPsrYrGTFa6XYSmD0Ijkg0z81aPrI"
-        };
+        //var telegramBot = new TelegramBot
+        //{
+        //    IsActive = true,
+        //    Id = Guid.NewGuid(),
+        //    UserId = user.Id,
+        //    Token = "5656162661:AAFR-yAPsrYrGTFa6XYSmD0Ijkg0z81aPrI"
+        //};
 
-        modelBuilder.Entity<TelegramBot>()
-            .HasData(telegramBot);
+        //modelBuilder.Entity<TelegramBot>()
+        //    .HasData(telegramBot);
     }
 }

@@ -12,7 +12,7 @@ async function SendRequest(urlEnd, requestType, data = null) {
     return await fetch(`${url}${urlEnd}`, request)
         .then(response => {
             if (response.status == 401) {
-                window.location.replace(`${url}login`);
+                window.location.replace(`login`);
             }
             return response;
         });

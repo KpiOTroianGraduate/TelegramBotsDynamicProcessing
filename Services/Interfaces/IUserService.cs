@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
 using Contracts.Dto.User;
+using Contracts.Entities;
 
 namespace Services.Interfaces;
 
 public interface IUserService
 {
-    Task<UserDto> GetUserByIdAsync(IEnumerable<Claim> claims, Guid id);
+    Task<User> GetUserByIdAsync(Guid id);
 
-    Task CreateUserAsync(IEnumerable<Claim> claims);
+    Task<UserDto> RegisterUserAsync(IEnumerable<Claim> claims);
 }

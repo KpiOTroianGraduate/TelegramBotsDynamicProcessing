@@ -6,6 +6,7 @@ using DAL.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
+using Microsoft.OpenApi.Models;
 using Services;
 using Services.Interfaces;
 
@@ -25,17 +26,33 @@ public class Program
 
 
         builder.Services.AddControllers().AddNewtonsoftJson();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-
-        builder.Services.AddDbContext<TelegramContext>(options =>
+        builder.Services.AddSwaggerGen(setup =>
         {
-            var connectionString = Environment.GetEnvironmentVariable("TelegramConnection");
-            connectionString =
-                "Server=tcp:hapan9.database.windows.net,1433;Initial Catalog=hapan9-telegram;Persist Security Info=False;User ID=CloudSAacd16069;Password=61BimitE61;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-            options.UseSqlServer(connectionString);
+            var jwtSecurityScheme = new OpenApiSecurityScheme
+            {
+                BearerFormat = "JWT",
+                Name = "JWT Authentication",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Description = "Put **_ONLY_** your JWT Bearer token on textbox below!",
+
+                Reference = new OpenApiReference
+                {
+                    Id = JwtBearerDefaults.AuthenticationScheme,
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            setup.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+
+            setup.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                { jwtSecurityScheme, Array.Empty<string>() }
+            });
+
         });
 
         builder.Services.AddTransient<ITelegramService, TelegramService>();

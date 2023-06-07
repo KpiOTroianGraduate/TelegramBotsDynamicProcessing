@@ -8,7 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\assets\favicon.ico" />
     <Content Remove="wwwroot\template.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="wwwroot\assets\favicon.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
