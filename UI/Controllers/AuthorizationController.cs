@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 using UI.Controllers.Base;
+using Utils;
 
 namespace UI.Controllers;
 
@@ -25,7 +26,15 @@ public class AuthorizationController : BaseController<AuthorizationController>
     [HttpGet("/registration")]
     public async Task<IActionResult> Registration()
     {
-        var result = await _userService.RegisterUserAsync(User.Claims).ConfigureAwait(false);
-        return Ok(result);
+        try
+        {
+            var result = await _userService.RegisterUserAsync(User.Claims).ConfigureAwait(false);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while registration");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
     }
 }

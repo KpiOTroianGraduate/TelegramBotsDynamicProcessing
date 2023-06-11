@@ -26,9 +26,17 @@ public class TelegramBotController : BaseController<TelegramBotController>
     [HttpGet]
     public async Task<IActionResult> GetTelegramBotsAsync()
     {
-        var telegramBots = await _telegramBotService.GetTelegramBotsAsync(User.Claims).ConfigureAwait(false);
-        var telegramBotsInfo = await _telegramService.GetBotsInfoAsync(telegramBots).ConfigureAwait(false);
-        return Ok(telegramBotsInfo);
+        try
+        {
+            var telegramBots = await _telegramBotService.GetTelegramBotsAsync(User.Claims).ConfigureAwait(false);
+            var telegramBotsInfo = await _telegramService.GetBotsInfoAsync(telegramBots).ConfigureAwait(false);
+            return Ok(telegramBotsInfo);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while getting telegram bot list");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
     }
 
     [HttpPost]
@@ -38,7 +46,7 @@ public class TelegramBotController : BaseController<TelegramBotController>
         {
             var available = await _telegramService.IsBotAvailableAsync(telegramBot.Token).ConfigureAwait(false);
 
-            if (!available) return BadRequest(JsonConvert.SerializeObject("Bot is not available"));
+            if (!available) return NotFound(JsonConvert.SerializeObject("Bot is not available"));
 
             if (telegramBot.IsActive) await _telegramService.SetWebHookAsync(telegramBot.Token).ConfigureAwait(false);
 
@@ -61,7 +69,7 @@ public class TelegramBotController : BaseController<TelegramBotController>
 
             var available = await _telegramService.IsBotAvailableAsync(telegramBot.Token).ConfigureAwait(false);
 
-            if (!available) return BadRequest(JsonConvert.SerializeObject("Bot is not available"));
+            if (!available) return NotFound(JsonConvert.SerializeObject("Bot is not available"));
 
             if (telegramBot.IsActive)
                 await _telegramService.SetWebHookAsync(telegramBot.Token).ConfigureAwait(false);

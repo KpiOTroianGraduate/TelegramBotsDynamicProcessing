@@ -3,7 +3,6 @@ using System.Transactions;
 using AutoMapper;
 using Contracts.Dto.User;
 using Contracts.Entities;
-using Contracts.Exceptions;
 using DAL.UnitOfWork.Interfaces;
 using Microsoft.Extensions.Logging;
 using Services.Base;
@@ -16,14 +15,6 @@ public class UserService : BaseService<UserService>, IUserService
     public UserService(IMapper mapper, IUnitOfWorkFactory unitOfWorkFactory, ILogger<UserService> logger) : base(mapper,
         unitOfWorkFactory, logger)
     {
-    }
-
-    public async Task<User> GetUserByIdAsync(Guid id)
-    {
-        var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
-        var user = await unitOfWork.UserRepository.GetAsync(id).ConfigureAwait(false);
-
-        return user ?? throw new NotFoundException();
     }
 
     public async Task<UserDto> RegisterUserAsync(IEnumerable<Claim> claims)
