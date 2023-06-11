@@ -1,10 +1,8 @@
 using AutoMapper;
 using Contracts.Profiles;
-using DAL;
 using DAL.UnitOfWork;
 using DAL.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Services;
@@ -26,7 +24,7 @@ public class Program
 
 
         builder.Services.AddControllers().AddNewtonsoftJson();
-        
+
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(setup =>
         {
@@ -52,7 +50,6 @@ public class Program
             {
                 { jwtSecurityScheme, Array.Empty<string>() }
             });
-
         });
 
         builder.Services.AddTransient<ITelegramService, TelegramService>();
@@ -61,6 +58,7 @@ public class Program
         builder.Services.AddTransient<ITelegramBotService, TelegramBotService>();
         builder.Services.AddTransient<ICommandService, CommandService>();
         builder.Services.AddTransient<ICommandActionService, CommandActionService>();
+        builder.Services.AddTransient<IVerifyService, VerifyService>();
         builder.Services.AddHttpClient();
         builder.Services.AddAutoMapper(m => m.AddProfiles(new List<Profile>
         {

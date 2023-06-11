@@ -16,21 +16,6 @@ public class TelegramController : BaseController<TelegramController>
         _telegramService = telegramService;
     }
 
-    [HttpGet("{botId}")]
-    public async Task<IActionResult> SetUpBot([FromRoute] string botId)
-    {
-        try
-        {
-            await _telegramService.SetUpBotAsync(botId).ConfigureAwait(false);
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex, $"SetUpBot, botId: {botId}, message: {ex.Message}");
-            return BadRequest();
-        }
-    }
-
     [HttpPost("{botId:required}")]
     public async Task<IActionResult> GetUpdateFromTelegram([FromRoute] string botId, [FromBody] Update update)
     {

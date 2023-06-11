@@ -8,15 +8,20 @@ namespace UI.Controllers;
 public class CommandController : BaseController<CommandController>
 {
     private readonly ICommandService _commandService;
+    private readonly IVerifyService _verifyService;
 
-    public CommandController(ICommandService commandService, ILogger<CommandController> logger) : base(logger)
+    public CommandController(ICommandService commandService, IVerifyService verifyService,
+        ILogger<CommandController> logger) : base(logger)
     {
         _commandService = commandService;
+        _verifyService = verifyService;
     }
 
     [HttpGet("{telegramBotId:guid:required}/byTelegramBotId")]
     public async Task<IActionResult> GetCommandsByTelegramBotIdAsync([FromRoute] Guid telegramBotId)
     {
+        if (!await _verifyService.VerifyTelegramBotAsync(User.Claims, telegramBotId).ConfigureAwait(false))
+            return NotFound();
         var result = await _commandService.GetCommandsByTelegramBotIdAsync(telegramBotId)
             .ConfigureAwait(false);
         return Ok(result);
@@ -25,6 +30,13 @@ public class CommandController : BaseController<CommandController>
     [HttpPost]
     public async Task<IActionResult> CreateCommandAsync([FromBody] CommandDto command)
     {
+        if (!await _verifyService.VerifyTelegramBotAsync(User.Claims, command.TelegramBotId).ConfigureAwait(false))
+            return NotFound();
+        if (command.CommandActionId != null)
+            if (!await _verifyService.VerifyTelegramBotAsync(User.Claims, command.CommandActionId.Value)
+                    .ConfigureAwait(false))
+                return NotFound();
+
         await _commandService.CreateCommandAsync(command).ConfigureAwait(false);
         return Ok();
     }
@@ -32,6 +44,12 @@ public class CommandController : BaseController<CommandController>
     [HttpPut("{id:guid:required}")]
     public async Task<IActionResult> UpdateCommandAsync([FromRoute] Guid id, [FromBody] CommandDto command)
     {
+        if (!await _verifyService.VerifyCommandAsync(User.Claims, id).ConfigureAwait(false)) return NotFound();
+        if (command.CommandActionId != null)
+            if (!await _verifyService.VerifyTelegramBotAsync(User.Claims, command.CommandActionId.Value)
+                    .ConfigureAwait(false))
+                return NotFound();
+
         await _commandService.UpdateCommandAsync(id, command).ConfigureAwait(false);
         return Ok();
     }
@@ -39,6 +57,7 @@ public class CommandController : BaseController<CommandController>
     [HttpDelete("{id:guid:required}")]
     public async Task<IActionResult> DeleteCommandAsync([FromRoute] Guid id)
     {
+        if (!await _verifyService.VerifyCommandAsync(User.Claims, id).ConfigureAwait(false)) return NotFound();
         await _commandService.DeleteCommandAsync(id).ConfigureAwait(false);
         return Ok();
     }

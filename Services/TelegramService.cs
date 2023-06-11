@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 using Services.Base;
 using Services.Interfaces;
 using Telegram.Bot;
-using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -19,6 +18,7 @@ namespace Services;
 
 public class TelegramService : BaseService<TelegramService>, ITelegramService
 {
+    private const string TelegramProcessingApiUrl = "https://hapan9-telegram.azurewebsites.net:443/api/Telegram/";
     private readonly HttpClient _httpClient;
 
     public TelegramService(IMapper mapper, IUnitOfWorkFactory unitOfWorkFactory, ILogger<TelegramService> logger,
@@ -124,24 +124,29 @@ public class TelegramService : BaseService<TelegramService>, ITelegramService
         }
     }
 
-    public async Task SetUpBotAsync(string botId)
+    public Task<bool> IsBotAvailableAsync(string botId)
+    {
+        var bot = new TelegramBotClient(botId, _httpClient);
+
+        return bot.TestApiAsync();
+    }
+
+    public async Task SetWebHookAsync(string botId)
     {
         var bot = new TelegramBotClient(botId, _httpClient);
         await bot.DeleteWebhookAsync().ConfigureAwait(false);
 
-        var isBotAvailable = await bot.TestApiAsync().ConfigureAwait(false);
-
-        if (!isBotAvailable) throw new ApiRequestException("Bot is unavailable");
-
-        await bot.SetWebhookAsync($"https://hapan9-telegram.azurewebsites.net:443/api/Telegram/{botId}")
+        await bot.SetWebhookAsync($"{TelegramProcessingApiUrl}{botId}")
             .ConfigureAwait(false);
     }
 
-    public async Task SendMessagesToAllAsync(string botId)
+    public async Task DeleteWebHookAsync(string botId)
     {
-
         var bot = new TelegramBotClient(botId, _httpClient);
+        var webHook = await bot.GetWebhookInfoAsync().ConfigureAwait(false);
+        if (webHook.Url.StartsWith(TelegramProcessingApiUrl)) await bot.DeleteWebhookAsync().ConfigureAwait(false);
     }
+
 
     public async Task<List<TelegramBotInfoDto>> GetBotsInfoAsync(List<TelegramBot> telegramBots)
     {

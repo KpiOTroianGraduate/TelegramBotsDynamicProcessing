@@ -7,6 +7,7 @@ namespace Services.Interfaces;
 public interface ITelegramBotService
 {
     public Task<List<TelegramBot>> GetTelegramBotsAsync(IEnumerable<Claim> claims);
+    public Task<TelegramBotDto> GetTelegramBotAsync(Guid id);
 
     public Task CreateTelegramBotAsync(IEnumerable<Claim> claims, TelegramBotDto telegramBot);
     public Task UpdateTelegramBotAsync(Guid id, TelegramBotDto telegramBot);

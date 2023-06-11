@@ -16,15 +16,6 @@ public class TelegramBotService : BaseService<TelegramBotService>, ITelegramBotS
     {
     }
 
-    public async Task CreateTelegramBotAsync(TelegramBotDto telegramBot)
-    {
-        var telegramBotEntity = Mapper.Map<TelegramBot>(telegramBot);
-
-        var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
-        await unitOfWork.TelegramBotRepository.AddAsync(telegramBotEntity).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync().ConfigureAwait(false);
-    }
-
     public async Task<List<TelegramBot>> GetTelegramBotsAsync(IEnumerable<Claim> claims)
     {
         var email = claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
@@ -35,6 +26,14 @@ public class TelegramBotService : BaseService<TelegramBotService>, ITelegramBotS
         var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
         return await unitOfWork.TelegramBotRepository
             .GetTelegramBotListAsync(b => b.User.Email.Equals(email)).ConfigureAwait(false);
+    }
+
+    public async Task<TelegramBotDto> GetTelegramBotAsync(Guid id)
+    {
+        var unitOfWork = UnitOfWorkFactory.CreateSqlUnitOfWork();
+        var bot = await unitOfWork.TelegramBotRepository.GetAsync(id).ConfigureAwait(false);
+
+        return Mapper.Map<TelegramBotDto>(bot);
     }
 
     public async Task CreateTelegramBotAsync(IEnumerable<Claim> claims, TelegramBotDto telegramBot)
