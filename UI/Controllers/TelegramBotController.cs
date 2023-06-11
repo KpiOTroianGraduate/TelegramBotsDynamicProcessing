@@ -1,7 +1,9 @@
 ﻿using Contracts.Dto.TelegramBot;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Services.Interfaces;
 using UI.Controllers.Base;
+using Utils;
 
 namespace UI.Controllers;
 
@@ -29,8 +31,17 @@ public class TelegramBotController : BaseController<TelegramBotController>
     [HttpPost]
     public async Task<IActionResult> CreateTelegramBotAsync([FromBody] TelegramBotDto telegramBot)
     {
-        await _telegramBotService.CreateTelegramBotAsync(User.Claims, telegramBot).ConfigureAwait(false);
-        return Ok();
+        try
+        {
+
+            await _telegramBotService.CreateTelegramBotAsync(User.Claims, telegramBot).ConfigureAwait(false);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while updating telegram bot");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
     }
 
     [HttpPut("{id:guid:required}")]
@@ -44,14 +55,22 @@ public class TelegramBotController : BaseController<TelegramBotController>
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error while updating telegram bot");
-            return BadRequest();
+            return BadRequest(ex.GetErrorMessageJson());
         }
     }
 
     [HttpDelete("{id:guid:required}")]
     public async Task<IActionResult> DeleteTelegramBotAsync([FromRoute] Guid id)
     {
-        await _telegramBotService.DeleteTelegramBotAsync(id).ConfigureAwait(false);
-        return Ok();
+        try
+        {
+            await _telegramBotService.DeleteTelegramBotAsync(id).ConfigureAwait(false);
+            return Ok();
+        }
+        catch(Exception ex)
+        {
+            Logger.LogError(ex, "Error while deleting telegram bot");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
     }
 }

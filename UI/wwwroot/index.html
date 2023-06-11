@@ -3,7 +3,7 @@
 <head>
     <title>JS test</title>
 </head>
-<body>
+<body style="font-family: 'Open Sans', sans-serif;">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-bottom">
         <div class="container px-4 px-lg-5">
             <a class="navbar-brand" href="#!">Dynamic creation of telegram bots</a>
@@ -13,7 +13,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" href="#!" id="homeMainButton">Home</a>
+                        <a class="nav-link" href="#!" id="homeMainButton" onclick="location.reload();">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#!">About</a>
@@ -61,54 +61,65 @@
 
         <div class="container py-5 h-100" id="botsListFrame" hidden>
             <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
-                        <div class="card-body p-5 text-center">
-
-                            <div id="presentTelegramBots"></div>
-                            <div id="newTelegramBot"></div>
-
-                        </div>
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <div id="presentTelegramBots"></div>
+                        <div id="newTelegramBot"></div>
                     </div>
                 </div>
             </div>
         </div>
 
 
-        <div class="container py-5 h-100" id="commandActions">
-            <table>
-                <thead>
-                    <tr>
-                        <td>
-                            <button id="Commands">Commands</button>
-                        </td>
-                        <td>
-                            <button id="CommandActionText">Text</button>
-                        </td>
-                        <td>
-                            <button id="CommandActionPost">Post</button>
-                        </td>
-                        <td>
-                            <button id="CommandActionInline">Inline</button>
-                        </td>
-                        <td>
-                            <button id="CommandActionReply">Reply</button>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="4">
-                            <div id="presentComandActions"></div>
-                            <div id="newComandActions"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="container py-5 h-100" id="commandActionsFrame">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col p-2">
+                                    <button class="btn btn-primary" id="backToBotList">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z" />
+                                        </svg>
+                                        Back to bots list
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row btn-group" role="group" aria-label="Basic radio toggle button group">
+                                <div class="col p-2">
+                                    <input type="radio" class="btn-check" name="btnradio" id="Commands" autocomplete="off" checked>
+                                    <label class="btn btn-outline-primary" for="Commands">Commands</label>
+                                </div>
+                                <div class="col p-2">
+                                    <input type="radio" class="btn-check" name="btnradio" id="CommandActionText" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="CommandActionText">Text</label>
+                                </div>
+                                <div class="col p-2">
+                                    <input type="radio" class="btn-check" name="btnradio" id="CommandActionPost" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="CommandActionPost">Post</label>
+                                </div>
+                                <div class="col p-2">
+                                    <input type="radio" class="btn-check" name="btnradio" id="CommandActionInline" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="CommandActionInline">Inline</label>
+                                </div>
+                                <div class="col p-2">
+                                    <input type="radio" class="btn-check" name="btnradio" id="CommandActionReply" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="CommandActionReply">Reply</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col p-2">
+                                    <div id="presentComandActions"></div>
+                                    <div id="newComandActions"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
     </section>
-
 
     <script type="text/javascript" src="js/models.js"></script>
     <script type="text/javascript" src="js/scripts.js"></script>
@@ -117,11 +128,16 @@
     <script type="text/javascript" src="js/telegramBot.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
 
 <script>
+
         if (jwtToken != null) {
             (async () => {
                 await SendRequest(`registration`, RequestType.GET)
@@ -148,6 +164,10 @@
         document.getElementById("loginButton").onclick = function () {
             window.location.replace(`/login`);
         }
+
+        document.getElementById("backToBotList").onclick = async () => {
+            await GetToTelegramBotsPage();
+        }
         console.log(jwtToken);
 
         async function GetToTelegramBotsPage() {
@@ -157,6 +177,7 @@
                     document.getElementById("botsListFrame").hidden = false;
                 });
         }
+
     </script>
 </body>
 </html>

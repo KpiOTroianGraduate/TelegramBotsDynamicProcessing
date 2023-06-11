@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+
+namespace Utils
+{
+    public static class ExceptionExtensions
+    {
+        public static string GetErrorMessageJson(this Exception ex)
+        {
+            return JsonConvert.SerializeObject(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+        }
+    }
+}

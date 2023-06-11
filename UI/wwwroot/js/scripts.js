@@ -15,7 +15,8 @@ async function SendRequest(urlEnd, requestType, data = null) {
                 window.location.replace(`login`);
             }
             return response;
-        });
+        })
+        .catch(ex => { console.log(ex); });
 }
 
 function showMessageBox(header, text, color = "#007aff") {
