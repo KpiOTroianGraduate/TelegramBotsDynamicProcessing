@@ -9,7 +9,7 @@ using Services.Interfaces;
 
 namespace Services;
 
-public class VerifyService : BaseService<VerifyService>, IVerifyService
+public sealed class VerifyService : BaseService<VerifyService>, IVerifyService
 {
     public VerifyService(IMapper mapper, IUnitOfWorkFactory unitOfWorkFactory, ILogger<VerifyService> logger) : base(
         mapper, unitOfWorkFactory, logger)

@@ -10,7 +10,7 @@ using Services.Interfaces;
 
 namespace Services;
 
-public class UserService : BaseService<UserService>, IUserService
+public sealed class UserService : BaseService<UserService>, IUserService
 {
     public UserService(IMapper mapper, IUnitOfWorkFactory unitOfWorkFactory, ILogger<UserService> logger) : base(mapper,
         unitOfWorkFactory, logger)

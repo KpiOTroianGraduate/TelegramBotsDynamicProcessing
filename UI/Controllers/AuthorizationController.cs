@@ -6,7 +6,7 @@ using Utils;
 
 namespace UI.Controllers;
 
-public class AuthorizationController : BaseController<AuthorizationController>
+public sealed class AuthorizationController : BaseController<AuthorizationController>
 {
     private readonly IUserService _userService;
 

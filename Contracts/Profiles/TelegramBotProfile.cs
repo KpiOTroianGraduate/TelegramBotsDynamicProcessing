@@ -14,5 +14,11 @@ public class TelegramBotProfile : Profile
 
         CreateMap<User, TelegramBotInfoDto>()
             .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+        CreateMap<string, TelegramBotDescriptionDto>()
+            .ForMember(dest => dest.ShortDescription, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.Name, opt => opt.Ignore())
+            .ForMember(dest => dest.UserName, opt => opt.Ignore())
+            .ForMember(dest => dest.Description, opt => opt.Ignore());
     }
 }

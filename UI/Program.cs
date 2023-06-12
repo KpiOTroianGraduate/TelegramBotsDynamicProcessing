@@ -3,6 +3,7 @@ using Contracts.Profiles;
 using DAL.UnitOfWork;
 using DAL.UnitOfWork.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Services;
@@ -94,6 +95,13 @@ public class Program
 
         app.MapControllers();
 
+        app.UseEndpoints(endpoints =>
+        {
+            if (!app.Environment.IsProduction())
+                endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
+            else
+                endpoints.MapControllers();
+        });
 
         app.Run();
     }

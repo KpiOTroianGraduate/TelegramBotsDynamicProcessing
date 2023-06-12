@@ -56,3 +56,8 @@ class TelegramBot {
         this.userId = userId;
     }
 }
+class Value {
+    constructor(value) {
+        this.value = value;
+    }
+}

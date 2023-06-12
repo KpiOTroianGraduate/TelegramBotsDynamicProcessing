@@ -9,6 +9,7 @@ const GetTelegramBots = async () => {
         .catch(ex => showMessageBox("Error while reading telegramBots list", ex, '#d70040'));
 
     for (let i = 0; i < result.length; i++) {
+        console.log(result[i]);
         let table = document.createElement('div');
         table.setAttribute("class", "container p-4");
         let thead = document.createElement('div');

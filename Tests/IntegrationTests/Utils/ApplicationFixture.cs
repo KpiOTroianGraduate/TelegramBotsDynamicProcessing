@@ -26,7 +26,6 @@ public class ApplicationFixture
             });
 
         Client = application.CreateClient();
-        var scope = application.Services.CreateScope().ServiceProvider;
     }
 
 

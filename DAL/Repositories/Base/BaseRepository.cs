@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace DAL.Repositories.Base;
 
-public abstract class BaseRepository<T, TA> where T : DbContext where TA : class
+public abstract class BaseRepository<T, TA> where T : ITelegramContext where TA : class
 {
     protected readonly T Db;
     protected readonly ILogger<TA> Logger;

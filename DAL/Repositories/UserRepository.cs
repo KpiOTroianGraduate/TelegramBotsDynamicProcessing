@@ -7,9 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace DAL.Repositories;
 
-public class UserRepository : BaseRepository<TelegramContext, UserRepository>, IUserRepository
+public sealed class UserRepository : BaseRepository<ITelegramContext, UserRepository>, IUserRepository
 {
-    public UserRepository(TelegramContext db, ILogger<UserRepository> logger) : base(db, logger)
+    public UserRepository(ITelegramContext db, ILogger<UserRepository> logger) : base(db, logger)
     {
     }
 

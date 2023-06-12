@@ -16,7 +16,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Services;
 
-public class TelegramService : BaseService<TelegramService>, ITelegramService
+public sealed class TelegramService : BaseService<TelegramService>, ITelegramService
 {
     private const string TelegramProcessingApiUrl = "https://hapan9-telegram.azurewebsites.net:443/api/Telegram/";
     private readonly HttpClient _httpClient;
@@ -184,5 +184,48 @@ public class TelegramService : BaseService<TelegramService>, ITelegramService
         }
 
         return results;
+    }
+
+    public Task ChangeNameAsync(string botId, string? value)
+    {
+        var bot = new TelegramBotClient(botId, _httpClient);
+        return bot.SetMyNameAsync(value);
+    }
+
+    public Task ChangeDescriptionAsync(string botId, string? value)
+    {
+        var bot = new TelegramBotClient(botId, _httpClient);
+        return bot.SetMyDescriptionAsync(value);
+    }
+
+    public Task ChangeShortDescriptionAsync(string botId, string? value)
+    {
+        var bot = new TelegramBotClient(botId, _httpClient);
+        return bot.SetMyShortDescriptionAsync(value);
+    }
+
+    public async Task<TelegramBotDescriptionDto> GetDescriptionAsync(string botId)
+    {
+        var bot = new TelegramBotClient(botId, _httpClient);
+        var info = await bot.GetMeAsync().ConfigureAwait(false);
+        var name = await bot.GetMyNameAsync().ConfigureAwait(false);
+        var description = await bot.GetMyDescriptionAsync().ConfigureAwait(false);
+        var shortDescription = await bot.GetMyShortDescriptionAsync().ConfigureAwait(false);
+
+        return Mapper.Map<TelegramBotDescriptionDto>(shortDescription.ShortDescription, opt =>
+        {
+            opt.AfterMap((_, dest) =>
+            {
+                dest.Name = name.Name;
+                dest.Description = description.Description;
+                dest.UserName = info.Username;
+            });
+        });
+    }
+
+    public Task ChangeCommandsAsync(string botId, IEnumerable<BotCommand> commands)
+    {
+        var bot = new TelegramBotClient(botId, _httpClient);
+        return bot.SetMyCommandsAsync(commands);
     }
 }

@@ -8,7 +8,7 @@ using Services.Interfaces;
 
 namespace Services;
 
-public class CommandActionService : BaseService<CommandActionService>, ICommandActionService
+public sealed class CommandActionService : BaseService<CommandActionService>, ICommandActionService
 {
     public CommandActionService(IMapper mapper, IUnitOfWorkFactory unitOfWorkFactory,
         ILogger<CommandActionService> logger) : base(mapper, unitOfWorkFactory, logger)

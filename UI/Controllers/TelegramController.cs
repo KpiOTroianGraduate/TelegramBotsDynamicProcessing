@@ -7,7 +7,7 @@ using UI.Controllers.Base;
 namespace UI.Controllers;
 
 [AllowAnonymous]
-public class TelegramController : BaseController<TelegramController>
+public sealed class TelegramController : BaseController<TelegramController>
 {
     private readonly ITelegramService _telegramService;
 

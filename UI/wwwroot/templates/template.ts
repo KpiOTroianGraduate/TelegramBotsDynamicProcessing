@@ -83,6 +83,13 @@
         }
     }
 
+    class Value {
+        value: string | undefined;
+        constructor(value: string | undefined) {
+            this.value = value;
+        }
+    }
+
     async function SendRequest(urlEnd: string, requestType: string, data: any) {
         return await fetch(`${url}${urlEnd}`, {
             method: requestType,

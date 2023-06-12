@@ -3,7 +3,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DAL;
 
-public sealed class TelegramContext : DbContext
+public interface ITelegramContext
+{
+    DbSet<User> Users { get; set; }
+    DbSet<TelegramBot> TelegramBots { get; set; }
+    DbSet<Command> Commands { get; set; }
+    DbSet<CommandAction> CommandActions { get; set; }
+
+    Task<int> SaveChangesAsync();
+}
+
+public sealed class TelegramContext : DbContext, ITelegramContext
 {
     public TelegramContext(DbContextOptions<TelegramContext> options) : base(options)
     {
@@ -17,6 +27,11 @@ public sealed class TelegramContext : DbContext
     public DbSet<Command> Commands { get; set; } = null!;
 
     public DbSet<CommandAction> CommandActions { get; set; } = null!;
+
+    public Task<int> SaveChangesAsync()
+    {
+        return base.SaveChangesAsync();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DAL.Repositories;
 
-public class CommandActionRepository : BaseRepository<TelegramContext, CommandActionRepository>,
+public sealed class CommandActionRepository : BaseRepository<TelegramContext, CommandActionRepository>,
     ICommandActionRepository
 {
     public CommandActionRepository(TelegramContext db, ILogger<CommandActionRepository> logger) : base(db, logger)

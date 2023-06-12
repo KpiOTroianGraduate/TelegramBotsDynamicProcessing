@@ -7,9 +7,10 @@ using Microsoft.Extensions.Logging;
 
 namespace DAL.Repositories;
 
-public class TelegramBotRepository : BaseRepository<TelegramContext, TelegramBotRepository>, ITelegramBotRepository
+public sealed class TelegramBotRepository : BaseRepository<ITelegramContext, TelegramBotRepository>,
+    ITelegramBotRepository
 {
-    public TelegramBotRepository(TelegramContext db, ILogger<TelegramBotRepository> logger) : base(db, logger)
+    public TelegramBotRepository(ITelegramContext db, ILogger<TelegramBotRepository> logger) : base(db, logger)
     {
     }
 

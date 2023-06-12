@@ -9,7 +9,7 @@ using Services.Interfaces;
 
 namespace Services;
 
-public class TelegramBotService : BaseService<TelegramBotService>, ITelegramBotService
+public sealed class TelegramBotService : BaseService<TelegramBotService>, ITelegramBotService
 {
     public TelegramBotService(IMapper mapper, IUnitOfWorkFactory unitOfWorkFactory, ILogger<TelegramBotService> logger)
         : base(mapper, unitOfWorkFactory, logger)

@@ -1,4 +1,5 @@
-﻿using Contracts.Dto.TelegramBot;
+﻿using Contracts.Dto;
+using Contracts.Dto.TelegramBot;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Services.Interfaces;
@@ -7,7 +8,7 @@ using Utils;
 
 namespace UI.Controllers;
 
-public class TelegramBotController : BaseController<TelegramBotController>
+public sealed class TelegramBotController : BaseController<TelegramBotController>
 {
     private readonly ITelegramBotService _telegramBotService;
     private readonly ITelegramService _telegramService;
@@ -101,6 +102,85 @@ public class TelegramBotController : BaseController<TelegramBotController>
         catch (Exception ex)
         {
             Logger.LogError(ex, "Error while deleting telegram bot");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
+    }
+
+    [HttpGet("{id:guid:required}/description")]
+    public async Task<IActionResult> GetDescriptionAsync([FromRoute] Guid id)
+    {
+        try
+        {
+            var available = await _verifyService.VerifyTelegramBotAsync(User.Claims, id).ConfigureAwait(false);
+            if (!available) return NotFound(JsonConvert.SerializeObject("Bot is not available"));
+
+            var bot = await _telegramBotService.GetTelegramBotAsync(id).ConfigureAwait(false);
+
+            var result = await _telegramService.GetDescriptionAsync(bot.Token).ConfigureAwait(false);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while getting telegram bot description");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
+    }
+
+    [HttpPut("{id:guid:required}/name")]
+    public async Task<IActionResult> SetBotNameAsync([FromRoute] Guid id, [FromBody] ValueDto item)
+    {
+        try
+        {
+            var available = await _verifyService.VerifyTelegramBotAsync(User.Claims, id).ConfigureAwait(false);
+            if (!available) return NotFound(JsonConvert.SerializeObject("Bot is not available"));
+            var bot = await _telegramBotService.GetTelegramBotAsync(id).ConfigureAwait(false);
+
+            await _telegramService.ChangeNameAsync(bot.Token, item.Value).ConfigureAwait(false);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while change telegram bot name");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
+    }
+
+    [HttpPut("{id:guid:required}/description")]
+    public async Task<IActionResult> SetDescriptionAsync([FromRoute] Guid id, [FromBody] ValueDto item)
+    {
+        try
+        {
+            var available = await _verifyService.VerifyTelegramBotAsync(User.Claims, id).ConfigureAwait(false);
+            if (!available) return NotFound(JsonConvert.SerializeObject("Bot is not available"));
+
+            var bot = await _telegramBotService.GetTelegramBotAsync(id).ConfigureAwait(false);
+
+            await _telegramService.ChangeDescriptionAsync(bot.Token, item.Value).ConfigureAwait(false);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while change telegram bot description");
+            return BadRequest(ex.GetErrorMessageJson());
+        }
+    }
+
+    [HttpPut("{id:guid:required}/shortDescription")]
+    public async Task<IActionResult> SetShortDescriptionAsync([FromRoute] Guid id, [FromBody] ValueDto item)
+    {
+        try
+        {
+            var available = await _verifyService.VerifyTelegramBotAsync(User.Claims, id).ConfigureAwait(false);
+            if (!available) return NotFound(JsonConvert.SerializeObject("Bot is not available"));
+
+            var bot = await _telegramBotService.GetTelegramBotAsync(id).ConfigureAwait(false);
+
+            await _telegramService.ChangeShortDescriptionAsync(bot.Token, item.Value).ConfigureAwait(false);
+            return Ok();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error while change telegram bot short description");
             return BadRequest(ex.GetErrorMessageJson());
         }
     }

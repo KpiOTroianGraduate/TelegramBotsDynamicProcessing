@@ -6,7 +6,7 @@ using Utils;
 
 namespace UI.Controllers;
 
-public class CommandController : BaseController<CommandController>
+public sealed class CommandController : BaseController<CommandController>
 {
     private readonly ICommandService _commandService;
     private readonly IVerifyService _verifyService;

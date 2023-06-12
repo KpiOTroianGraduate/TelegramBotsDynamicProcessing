@@ -98,6 +98,12 @@ var Tempate;
         }
         return TelegramBot;
     }());
+    var Value = /** @class */ (function () {
+        function Value(value) {
+            this.value = value;
+        }
+        return Value;
+    }());
     function SendRequest(urlEnd, requestType, data) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
