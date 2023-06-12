@@ -98,25 +98,5 @@ public sealed class TelegramContext : DbContext, ITelegramContext
             .OnDelete(DeleteBehavior.ClientSetNull);
 
         #endregion
-
-        //var user = new User
-        //{
-        //    Id = Guid.NewGuid(),
-        //    Email = "tpo9h.cawa@gmail.com"
-        //};
-
-        //modelBuilder.Entity<User>()
-        //    .HasData(user);
-
-        //var telegramBot = new TelegramBot
-        //{
-        //    IsActive = true,
-        //    Id = Guid.NewGuid(),
-        //    UserId = user.Id,
-        //    Token = "5656162661:AAFR-yAPsrYrGTFa6XYSmD0Ijkg0z81aPrI"
-        //};
-
-        //modelBuilder.Entity<TelegramBot>()
-        //    .HasData(telegramBot);
     }
 }

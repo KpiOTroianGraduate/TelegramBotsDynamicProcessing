@@ -1,4 +1,4 @@
-﻿const url = "https://hapan9-telegram.azurewebsites.net/index.html";
+﻿const url = "https://hapan9-telegram.azurewebsites.net/";
 var telegramBotId;
 var jwtToken;
 

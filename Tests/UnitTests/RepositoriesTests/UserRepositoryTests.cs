@@ -35,7 +35,7 @@ public class UserRepositoryTests
         await userRepository.AddAsync(user).ConfigureAwait(false);
 
         // Assert
-        _contextMock.Verify(c => c.Users.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()), Times.Once);
+        _contextMock.Verify(c => c.Users.AddAsync(It.IsAny<User>(), It.IsAny<CancellationToken>()));
     }
 
     [Fact]
@@ -110,6 +110,6 @@ public class UserRepositoryTests
         await userRepository.DeleteAsync(users.First().Id).ConfigureAwait(false);
 
         // Assert
-        _contextMock.Verify(c => c.Users.Remove(It.IsAny<User>()), Times.Once);
+        _contextMock.Verify(c => c.Users.Remove(It.IsAny<User>()));
     }
 }

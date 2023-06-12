@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using AutoFixture;
+using Contracts.Dto;
 using Contracts.Dto.TelegramBot;
 using Contracts.Entities;
 using Microsoft.AspNetCore.Http;
@@ -274,6 +275,260 @@ public class TelegramBotControllerTests
 
         // Act
         var result = await telegramBotController.DeleteTelegramBotAsync(It.IsAny<Guid>());
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+        _loggerMock.Verify(l => l.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
+            It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()!));
+    }
+
+    [Fact]
+    public async Task GetTelegramBotDescription_ShouldReturnOk()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        var item = _fixture.Create<TelegramBotDto>();
+        _telegramBotServiceMock.Setup(s => s.GetTelegramBotAsync(It.IsAny<Guid>())).ReturnsAsync(item);
+
+        // Act
+        var result = await telegramBotController.GetDescriptionAsync(It.IsAny<Guid>());
+
+        // Assert
+        Assert.IsType<OkObjectResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+        _telegramBotServiceMock.Verify(s => s.GetTelegramBotAsync(It.IsAny<Guid>()));
+        _telegramServiceMock.Verify(s => s.GetDescriptionAsync(It.IsAny<string>()));
+    }
+
+    [Fact]
+    public async Task GetTelegramBotDescription_ShouldReturnNotFound_WhenTokenIsInvalid()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+
+        // Act
+        var result = await telegramBotController.GetDescriptionAsync(It.IsAny<Guid>());
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+    }
+
+    [Fact]
+    public async Task GetTelegramBotDescription_ShouldLogError_WhenThrows()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object);
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ThrowsAsync(new Exception());
+
+        // Act
+        var result = await telegramBotController.GetDescriptionAsync(It.IsAny<Guid>());
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+        _loggerMock.Verify(l => l.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
+            It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()!));
+    }
+
+    [Fact]
+    public async Task SetBotNameAsync_ShouldReturnOk()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        var bot = _fixture.Create<TelegramBotDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        var item = _fixture.Create<ValueDto>();
+        _telegramBotServiceMock.Setup(s => s.GetTelegramBotAsync(It.IsAny<Guid>())).ReturnsAsync(bot);
+
+        // Act
+        var result = await telegramBotController.SetBotNameAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+        _telegramBotServiceMock.Verify(s => s.GetTelegramBotAsync(It.IsAny<Guid>()));
+        _telegramServiceMock.Verify(s => s.ChangeNameAsync(It.IsAny<string>(), It.IsAny<string>()));
+    }
+
+    [Fact]
+    public async Task SetBotNameAsync_ShouldReturnNotFound_WhenTokenIsInvalid()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        var item = _fixture.Create<ValueDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+        // Act
+        var result = await telegramBotController.SetBotNameAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+    }
+
+    [Fact]
+    public async Task SetBotNameAsync_ShouldLogError_WhenThrows()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object);
+        var item = _fixture.Create<ValueDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ThrowsAsync(new Exception());
+
+        // Act
+        var result = await telegramBotController.SetBotNameAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+        _loggerMock.Verify(l => l.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
+            It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()!));
+    }
+
+    [Fact]
+    public async Task SetDescriptionAsync_ShouldReturnOk()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        var bot = _fixture.Create<TelegramBotDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        var item = _fixture.Create<ValueDto>();
+        _telegramBotServiceMock.Setup(s => s.GetTelegramBotAsync(It.IsAny<Guid>())).ReturnsAsync(bot);
+
+        // Act
+        var result = await telegramBotController.SetDescriptionAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+        _telegramBotServiceMock.Verify(s => s.GetTelegramBotAsync(It.IsAny<Guid>()));
+        _telegramServiceMock.Verify(s => s.ChangeDescriptionAsync(It.IsAny<string>(), It.IsAny<string>()));
+    }
+
+    [Fact]
+    public async Task SetDescriptionAsync_ShouldReturnNotFound_WhenTokenIsInvalid()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        var item = _fixture.Create<ValueDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+        // Act
+        var result = await telegramBotController.SetDescriptionAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+    }
+
+    [Fact]
+    public async Task SetDescriptionAsync_ShouldLogError_WhenThrows()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object);
+        var item = _fixture.Create<ValueDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ThrowsAsync(new Exception());
+
+        // Act
+        var result = await telegramBotController.SetDescriptionAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+        _loggerMock.Verify(l => l.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(),
+            It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()!));
+    }
+
+    [Fact]
+    public async Task SetShortDescriptionAsync_ShouldReturnOk()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        var bot = _fixture.Create<TelegramBotDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(true);
+        var item = _fixture.Create<ValueDto>();
+        _telegramBotServiceMock.Setup(s => s.GetTelegramBotAsync(It.IsAny<Guid>())).ReturnsAsync(bot);
+
+        // Act
+        var result = await telegramBotController.SetShortDescriptionAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<OkResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+        _telegramBotServiceMock.Verify(s => s.GetTelegramBotAsync(It.IsAny<Guid>()));
+        _telegramServiceMock.Verify(s => s.ChangeShortDescriptionAsync(It.IsAny<string>(), It.IsAny<string>()));
+    }
+
+    [Fact]
+    public async Task SetShortDescriptionAsync_ShouldReturnNotFound_WhenTokenIsInvalid()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object)
+        {
+            ControllerContext = _controllerContext
+        };
+        var item = _fixture.Create<ValueDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ReturnsAsync(false);
+        // Act
+        var result = await telegramBotController.SetShortDescriptionAsync(It.IsAny<Guid>(), item);
+
+        // Assert
+        Assert.IsType<NotFoundObjectResult>(result);
+        _verifyServiceMock.Verify(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()));
+    }
+
+    [Fact]
+    public async Task SetShortDescriptionAsync_ShouldLogError_WhenThrows()
+    {
+        // Arrange
+        var telegramBotController = new TelegramBotController(_telegramBotServiceMock.Object,
+            _telegramServiceMock.Object, _verifyServiceMock.Object, _loggerMock.Object);
+        var item = _fixture.Create<ValueDto>();
+        _verifyServiceMock.Setup(s => s.VerifyTelegramBotAsync(It.IsAny<IEnumerable<Claim>>(), It.IsAny<Guid>()))
+            .ThrowsAsync(new Exception());
+
+        // Act
+        var result = await telegramBotController.SetShortDescriptionAsync(It.IsAny<Guid>(), item);
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(result);
