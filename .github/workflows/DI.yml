@@ -9,7 +9,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    uses: ./.github/actions/local-action CI.yml
+    uses: ./.github/workflows/CI.yml
 
     steps:
       - name: dotnet publish
