@@ -6,13 +6,17 @@ on:
   workflow_dispatch:
 
 jobs:
-
-  publish:
+  build:
     runs-on: ubuntu-latest
     
     steps:
+      - uses: actions/checkout@v3
       - name : build
-        uses: ./github/workflows/CI.yml
+        uses: ./.github/workflows/CI.yml
+
+      - uses: actions/checkout@v3
+      - name : build
+        uses: ./.github/workflows/CI.yml
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
