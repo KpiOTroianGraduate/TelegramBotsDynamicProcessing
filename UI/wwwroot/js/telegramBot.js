@@ -4,7 +4,7 @@ const GetTelegramBots = async () => {
     var presentComandActions = document.getElementById("presentComandActions");
     var newComandActions = document.getElementById("newComandActions");
 
-    document.getElementById("commandActionsFrame").hidden = false;
+    document.getElementById("commandActionsFrame").hidden = true;
 
     presentComandActions.innerHTML = "";
     newComandActions.innerHTML = "";
