@@ -73,7 +73,7 @@ public sealed class TelegramService : BaseService<TelegramService>, ITelegramSer
                 var actionContent = JsonConvert.DeserializeObject<KeyboardMarkupDto<string>>(commandAction.Content);
                 if (actionContent == null) break;
 
-                var content = JsonConvert.SerializeObject(update);
+                var content = JsonConvert.SerializeObject(update.Message);
                 var httpContent = new StringContent(content, Encoding.UTF8, "application/json");
                 await _httpClient.PostAsync(actionContent.Content, httpContent).ConfigureAwait(false);
                 break;
