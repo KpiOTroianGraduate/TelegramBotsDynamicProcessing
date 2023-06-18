@@ -9,9 +9,11 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/CI.yml
-
+    
     steps:
+      - name : build
+        uses: ./.github/workflows/CI.yml
+
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
