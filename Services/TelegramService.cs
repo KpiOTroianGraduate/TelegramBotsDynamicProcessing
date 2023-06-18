@@ -74,6 +74,7 @@ public sealed class TelegramService : BaseService<TelegramService>, ITelegramSer
                 if (actionContent == null) break;
 
                 var content = JsonConvert.SerializeObject(update.Message);
+                Logger.LogCritical(content);
                 var httpContent = new StringContent(content, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync(actionContent.Content, httpContent).ConfigureAwait(false);
