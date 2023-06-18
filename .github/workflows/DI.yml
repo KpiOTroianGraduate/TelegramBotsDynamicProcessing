@@ -12,7 +12,7 @@ jobs:
     
     steps:
       - name : build
-        uses: ./.github/workflows/CI.yml
+        uses: ./github/workflows/CI.yml
 
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
