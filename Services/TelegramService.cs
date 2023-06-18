@@ -77,7 +77,13 @@ public sealed class TelegramService : BaseService<TelegramService>, ITelegramSer
                 {
                     var content = JsonConvert.SerializeObject(update.Message);
                     var httpContent = new StringContent(content, Encoding.UTF8, "application/json");
-                    await _httpClient.PostAsync(actionContent.Content, httpContent).ConfigureAwait(false);
+                    var response = await _httpClient.PostAsync(actionContent.Content, httpContent).ConfigureAwait(false);
+                    response.EnsureSuccessStatusCode();
+
+                    var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    await bot.SendTextMessageAsync(update.Message.Chat.Id, result)
+                        .ConfigureAwait(false);
+
                 }
                 catch (Exception ex)
                 {
