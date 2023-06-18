@@ -75,6 +75,8 @@ public sealed class TelegramService : BaseService<TelegramService>, ITelegramSer
                 if (actionContent == null) break;
 
                 var content = JsonSerializer.Serialize(update.Message);
+                Logger.LogInformation(content);
+
                 var httpContent = new StringContent(content, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync(actionContent.Content, httpContent).ConfigureAwait(false);
@@ -83,8 +85,8 @@ public sealed class TelegramService : BaseService<TelegramService>, ITelegramSer
                 try
                 {
                     response.EnsureSuccessStatusCode();
-
-                    await bot.SendTextMessageAsync(update.Message.Chat.Id, result)
+                    var message = JsonConvert.DeserializeObject<string>(result);
+                    await bot.SendTextMessageAsync(update.Message.Chat.Id, message!)
                         .ConfigureAwait(false);
                 }
                 catch (Exception ex)
