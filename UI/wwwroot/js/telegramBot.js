@@ -1,6 +1,15 @@
 ﻿var userId;
 
 const GetTelegramBots = async () => {
+    var presentComandActions = document.getElementById("presentComandActions");
+    var newComandActions = document.getElementById("newComandActions");
+
+    presentComandActions.innerHTML = "";
+    newComandActions.innerHTML = "";
+
+    presentComandActions.hidden = true;
+    newComandActions.hidden = true;
+
     var presentBots = document.getElementById("presentTelegramBots");
     presentBots.innerHTML = "";
 
