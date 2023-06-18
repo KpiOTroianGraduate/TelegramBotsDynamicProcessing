@@ -13,6 +13,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Services;
 
@@ -73,27 +74,24 @@ public sealed class TelegramService : BaseService<TelegramService>, ITelegramSer
                 var actionContent = JsonConvert.DeserializeObject<KeyboardMarkupDto<string>>(commandAction.Content);
                 if (actionContent == null) break;
 
-                var content = JsonConvert.SerializeObject(update.Message);
-                Logger.LogCritical(content);
+                var content = JsonSerializer.Serialize(update.Message);
                 var httpContent = new StringContent(content, Encoding.UTF8, "application/json");
 
                 var response = await _httpClient.PostAsync(actionContent.Content, httpContent).ConfigureAwait(false);
+                var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 try
                 {
-                    
                     response.EnsureSuccessStatusCode();
-                    var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                        await bot.SendTextMessageAsync(update.Message.Chat.Id, result)
+                    await bot.SendTextMessageAsync(update.Message.Chat.Id, result)
                         .ConfigureAwait(false);
-
                 }
                 catch (Exception ex)
                 {
-                    var result = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                        Logger.LogError(ex, result);
+                    Logger.LogError(ex, result);
                 }
+
                 break;
             }
             case CommandActionType.InlineKeyboard:
