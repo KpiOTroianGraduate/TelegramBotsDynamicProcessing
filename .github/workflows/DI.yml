@@ -2,15 +2,14 @@ name: Build and deploy ASP.Net Core app to Azure Web App - hapan9-telegram
 
 on:
   push:
-    branches:
-      - develop
+    branches: [ "develop" ]
   workflow_dispatch:
 
 jobs:
 
   publish:
-    needs: test
     runs-on: ubuntu-latest
+    needs: test
 
     steps:
       - name: dotnet publish
@@ -24,7 +23,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: publish
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
